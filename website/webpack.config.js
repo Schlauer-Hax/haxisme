@@ -33,7 +33,7 @@ module.exports = (_, mode) => {
         output: {
             filename: '[name].js',
             chunkFilename: '[name].bundle.js',
-            path: path.resolve(__dirname, '..', 'haxismeapii', 'public'),
+            path: path.resolve(__dirname, '..', 'server', 'public'),
             clean: true
         },
         resolve: {

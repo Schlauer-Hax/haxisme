@@ -1,7 +1,6 @@
 {
     "name": "haxis.me-website",
     "version": "0.0.0",
-    "main": "index.ts",
     "scripts": {
         "watch": "npm-watch build",
         "start": "webpack serve",
