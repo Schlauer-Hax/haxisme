@@ -47,20 +47,17 @@ service.get('/api/battery', (res, req) => {
 let activeConnections: WebSocket[] = [];
 export const setLastDiscordMessage = (message: any) => lastmessage.discord = message;
 
+const devices = config.devices.map(device => {
+    return {
+        name: device,
+        battery: 0,
+        time: 0
+    }
+})
+
 let lastmessage = {
     discord: '',
-    apple: [
-        {
-            name: "iPhone von Max",
-            battery: 0,
-            time: 0
-        },
-        {
-            name: "iPad von Max",
-            battery: 0,
-            time: 0
-        }
-    ],
+    apple: devices,
     spotify: ''
 };
 
