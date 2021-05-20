@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "target": "es2020",
+        "module": "CommonJS",
+        "outDir": "./bin",
+        "strict": true,
+        "skipLibCheck": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noImplicitAny": false,
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "node"
+    },
+    "exclude": [
+        "node_modules",
+        "bin"
+    ],
+    "compileOnSave": true
+}
