@@ -28,7 +28,7 @@ fs.readdirSync('./public/').filter(x => x != "index.html").forEach(x => {
 
 service.get('/callback/', (res, req) => {
     console.log(req.getQuery())
-    var code = req.getQuery().replace("code=", "");
+    const code = req.getQuery().replace("code=", "");
     console.log(code)
     spotify.auth(code)
     res.end();
@@ -37,8 +37,8 @@ service.get('/callback/', (res, req) => {
 service.get('/api/battery', (res, req) => {
     if (req.getQuery().split("password=")[1]==config.api_pw) {
         console.log(req.getQuery())
-        var percent: number = Math.round(+req.getQuery().replace("percentage=", "").split("&")[0]);
-        var name = req.getQuery().split("name=")[1].split('&')[0].replace('%20', ' ').replace('%20', ' ');
+        const percent: number = Math.round(+req.getQuery().replace("percentage=", "").split("&")[0]);
+        const name = req.getQuery().split("name=")[1].split('&')[0].replace('%20', ' ').replace('%20', ' ');
         updateApplePercentage(name, percent)
     }
     res.end();

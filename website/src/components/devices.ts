@@ -24,11 +24,11 @@ export const renderDevices = (): RenderElement => ({
         const skillsArea = custom('section', undefined, "skills-area");
         const mySkills = custom('h2', "MY DEVICES", 'my-skills')
         const renderProgressBar = (name: string, progress: number, timestamp: number) => {
-            var date = new Date(timestamp);
-            var hours = date.getHours();
-            var minutes = "0" + date.getMinutes();
-            var seconds = "0" + date.getSeconds();
-            var time = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+            const date = new Date(timestamp);
+            const hours = date.getHours();
+            const minutes = "0" + date.getMinutes();
+            const seconds = "0" + date.getSeconds();
+            const time = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
             const background = custom('div', undefined, 'skill-bar');
             const foreground = custom('div', span(name + " - " + progress + "% - " + time))
             foreground.style.width = `${progress}%`;
