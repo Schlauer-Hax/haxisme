@@ -1,0 +1,53 @@
+.skills-area {
+    max-width: var(--max-width);
+    margin: var(--gap) auto 2rem;
+}
+
+.my-skills {
+    text-align: left;
+    margin: 2.5rem 0 1rem 0;
+    display: block;
+    font-weight: 600;
+    text-shadow: none;
+    color: var(--on-card-text);
+}
+
+.skill-bar {
+    background-color: var(--background-card);
+    margin-bottom: var(--gap);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    position: relative;
+}
+
+.skill-bar span {
+    display: inline-block;
+    font-weight: 400;
+    font-size: 1.5rem;
+    white-space: nowrap;
+    color: var(--on-card-text);
+    padding: 0.6rem 0.8rem 0.48rem;
+}
+
+.skill-bar div {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    background: hsl(141, 68%, 50%);
+    overflow: hidden;
+}
+
+.skill-bar div.charging {
+    background: repeating-linear-gradient( 45deg, hsl(141, 68%, 50%), hsl(141, 68%, 50%) 10px, hsl(141, 68%, 25%) 10px, hsl(141, 68%, 25%) 20px);
+}
+
+.skill-bar div span {
+    color: var(--on-background-text);
+}
+
+.skills {
+    font-size: 1.2rem;
+    font-weight: 400;
+    word-spacing: 0.4rem;
+    color: var(--on-card-text);
+}

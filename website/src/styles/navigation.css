@@ -1,0 +1,38 @@
+.nav {
+    padding: 0;
+    margin: 0 auto;
+    max-width: 68.5rem;
+    grid-template-columns: auto max-content max-content max-content;
+    opacity: 0.6;
+    display: grid;
+    animation: flowIn 1500ms ease;
+}
+
+.nav a {
+    font-size: 1.7rem;
+    padding: 1.6rem;
+    display: inline-block;
+    cursor: pointer;
+    color: var(--on-card-text);
+    text-decoration: none;
+}
+@media (max-width: 1129px)  {
+    .nav a {
+        font-size: 1.5rem;
+        padding: 1.5rem;
+    }
+    .nav {
+        max-width: 59.5rem;
+    }
+}
+@media(max-width: 957px) {
+    .nav {
+        margin: 0 1.4rem;
+    }
+}
+@media(max-width: 729px) {
+    .nav a {
+        font-size: 1rem;
+        padding: 1rem 0.5rem 0.5rem;
+    }
+}

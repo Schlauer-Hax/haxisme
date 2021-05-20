@@ -1,0 +1,11 @@
+.footer {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: auto max-content;
+    opacity: .6;
+}
+.footer span a {
+    color: var(--on-card-text);
+    text-decoration: none;
+    padding: 1rem;
+}
