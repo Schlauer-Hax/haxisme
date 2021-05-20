@@ -1,7 +1,7 @@
 import { emitEvent } from "./eventListener";
 
 export function startConnection() {
-    const websocket = new WebSocket('wss://' + location.hostname);
+    const websocket = new WebSocket((location.protocol == 'http:' ? 'ws://' : 'wss://') + location.hostname +':'+ location.port);
     websocket.onmessage = (message) => {
         emitEvent(JSON.parse(message.data))
     };

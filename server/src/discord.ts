@@ -6,7 +6,7 @@ import { setLastDiscordMessage, updateDiscord } from "./websocketserver";
 export function start() {
     let client = new Client();
     client.on('presenceUpdate', (_, newPresence) => {
-        if (newPresence?.user?.id == config.userid && newPresence?.guild?.id == config.guildId) {
+        if (newPresence.user!.id == config.userid && newPresence!.guild!.id == config.guildId) {
             updateDiscord(([newPresence.activities, newPresence.status]));
         }
     })
