@@ -89,6 +89,8 @@ export const renderCards = () => {
                 spotifyname = "Last song: " + data.spotify.item.name + " - " + data.spotify.item.artists.map((artist: any) => artist.name).join(', ');
             }
             spotifydevice = "Playback Paused";
+            spotifyprogress = 0;
+            shell.innerHTML = '';
         }
 
 
