@@ -16,6 +16,8 @@ let spotifydevice = "";
 let spotifyprogress = 0;
 let spotifyid = '';
 
+const progressbarStyle = (width: number) => 'width: '+width+'%;height: 10px;bottom: 0;position: absolute;transition:width 5s;-moz-transition:width 5s;-webkit-transition:width 5s;-o-transition:width 5s;background: green;border-radius: 0.6rem;'
+
 export const renderCards = () => {
     const shell = span(undefined)
 
@@ -37,7 +39,7 @@ export const renderCards = () => {
             })
         ).draw();
         var progressbar = document.createElement('div');
-        progressbar.setAttribute('style', 'width: '+0+'%;height: 10px;bottom: 0;position: absolute;transition:width 5s;-moz-transition:width 5s;-webkit-transition:width 5s;-o-transition:width 5s;background: green;');
+        progressbar.setAttribute('style', progressbarStyle(0));
         element.getElementsByTagName("card")[1].setAttribute('style', 'position: relative;');
         element.getElementsByTagName("card")[1].append(progressbar);
         return element;
@@ -48,22 +50,26 @@ export const renderCards = () => {
 
     registerEvent((data: any) => {
 
-        status = data.discord[1];
+        if (status != data.discord[1]) {
+            status = data.discord[1];
 
-        switch (status) {
-            case "online":
-                discordlogo = discordlogoonline;
-                break;
-            case "idle":
-                discordlogo = discordlogoidle;
-                break;
+            switch (status) {
+                case "online":
+                    discordlogo = discordlogoonline;
+                    break;
+                case "idle":
+                    discordlogo = discordlogoidle;
+                    break;
 
-            case "dnd":
-                discordlogo = discordlogodnd;
-                break;
-            case "offline":
-                discordlogo = discordlogooffline;
-                break;
+                case "dnd":
+                    discordlogo = discordlogodnd;
+                    break;
+                case "offline":
+                    discordlogo = discordlogooffline;
+                    break;
+            }
+
+            shell.innerHTML = "";
         }
 
         if (data.spotify.is_playing) {
@@ -91,7 +97,7 @@ export const renderCards = () => {
 
         var progressbar: HTMLDivElement | null = document.querySelector("body > article > span:nth-child(3) > cardlist > card:nth-child(2) > div:nth-child(4)")
         if (progressbar) {
-            progressbar.setAttribute('style', 'width: '+spotifyprogress+'%;height: 10px;bottom: 0;position: absolute;transition:width 5s;-moz-transition:width 5s;-webkit-transition:width 5s;-o-transition:width 5s;background: green;')
+            progressbar.setAttribute('style', progressbarStyle(spotifyprogress))
         }
 
     })
