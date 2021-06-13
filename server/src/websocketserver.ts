@@ -1,7 +1,8 @@
-import { App, WebSocket } from 'uWebSockets.js';
+import {App, WebSocket} from 'uWebSockets.js';
 import * as fs from 'fs';
 import * as spotify from './spotify';
-import { config } from '../config';
+import {config} from '../config';
+
 const service = App()
 
 spotify
@@ -35,23 +36,34 @@ service.get('/callback/', (res, req) => {
 })
 
 service.get('/api/battery', (res, req) => {
-    if (req.getQuery().split("password=")[1]==config.api_pw) {
+    if (req.getQuery().split("password=")[1] == config.api_pw) {
         console.log(req.getQuery())
-        const params: string[][] = req.getQuery().split('&').map(val=>val.split('='));
-        const percent: number = Math.round(+params.filter(val => val[0]=='percentage')[0][1]);
-        const name = params.filter(val => val[0]=='name')[0][1].split("%20").join(" ");
-        updateAppleStatus(name, percent, undefined)
+        const params: string[][] = req.getQuery().split('&').map(val => val.split('='));
+        const percent: number = Math.round(+params.filter(val => val[0] == 'percentage')[0][1]);
+        const name = params.filter(val => val[0] == 'name')[0][1].split("%20").join(" ");
+        updateAppleStatus(name, percent, undefined, undefined)
     }
     res.end();
 })
 
 service.get('/api/charging', (res, req) => {
-    if (req.getQuery().split("password=")[1]==config.api_pw) {
+    if (req.getQuery().split("password=")[1] == config.api_pw) {
         console.log(req.getQuery())
-        const params: string[][] = req.getQuery().split('&').map(val=>val.split('='));
-        const charging: boolean = params.filter(val => val[0]=='charging')[0][1]==='true';
-        const name = params.filter(val => val[0]=='name')[0][1].split("%20").join(" ");
-        updateAppleStatus(name, undefined, charging)
+        const params: string[][] = req.getQuery().split('&').map(val => val.split('='));
+        const charging: boolean = params.filter(val => val[0] == 'charging')[0][1] === 'true';
+        const name = params.filter(val => val[0] == 'name')[0][1].split("%20").join(" ");
+        updateAppleStatus(name, undefined, charging, undefined)
+    }
+    res.end();
+})
+
+service.get('/api/connection', (res, req) => {
+    if (req.getQuery().split("password=")[1] == config.api_pw) {
+        console.log(req.getQuery())
+        const params: string[][] = req.getQuery().split('&').map(val => val.split('='));
+        const connection: string = params.filter(val => val[0] == 'connection')[0][1]
+        const name = params.filter(val => val[0] == 'name')[0][1].split("%20").join(" ");
+        updateAppleStatus(name, undefined, undefined, connection)
     }
     res.end();
 })
@@ -64,6 +76,7 @@ const devices = config.devices.map(device => {
         name: device,
         battery: 0,
         charging: false,
+        connection: 'NaN',
         time: 0
     }
 })
@@ -84,13 +97,15 @@ export function updateDiscord(message: any) {
     updateAllSockets(lastmessage)
 }
 
-function updateAppleStatus(name: string, battery: number | undefined, charging: boolean | undefined) {
+function updateAppleStatus(name: string, battery: number | undefined, charging: boolean | undefined, connection: string | undefined) {
     lastmessage.apple = lastmessage.apple.map(device => {
-        if (device.name==name) {
+        if (device.name == name) {
             if (battery)
-            device.battery = battery;
-            if (charging!=undefined)
-            device.charging = charging;
+                device.battery = battery;
+            if (charging != undefined)
+                device.charging = charging;
+            if (connection != undefined)
+                device.connection = connection;
             device.time = new Date().getTime()
         }
         return device;
