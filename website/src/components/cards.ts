@@ -1,5 +1,5 @@
-import { Card, modernCard, span } from '@lucsoft/webgen';
-import { registerEvent } from '../data/eventListener';
+import {Card, modernCard, span} from '@lucsoft/webgen';
+import {registerEvent} from '../data/eventListener';
 
 import discordlogoonline from '../imgs/discord_online.svg';
 import discordlogoidle from '../imgs/discord_idle.svg';
@@ -13,29 +13,37 @@ let discordlogo = discordlogoonline;
 let spotifylogo = spotifylistening;
 let spotifyname = "Not Playing";
 let spotifydevice = "";
+let spotifyprogress = 0;
+let spotifyid = '';
 
 export const renderCards = () => {
     const shell = span(undefined)
 
-    const list = () => Card({},
-        modernCard({
-            align: "right",
-            icon: discordlogo,
-            title: status.charAt(0).toUpperCase() + status.slice(1),
-            subtitle: "Discord",
-            description: "Add me: Hax#6775"
-        }),
-        modernCard({
-            align: "right",
-            icon: spotifylogo,
-            title: spotifydevice,
-            subtitle: "Spotify",
-            description: spotifyname
-        })
-    ).draw()
-
-    shell.innerHTML = "";
-    shell.append(list());
+    const list = () => {
+        var element = Card({},
+            modernCard({
+                align: "right",
+                icon: discordlogo,
+                title: status.charAt(0).toUpperCase() + status.slice(1),
+                subtitle: "Discord",
+                description: "Add me: Hax#6775"
+            }),
+            modernCard({
+                align: "right",
+                icon: spotifylogo,
+                title: spotifydevice,
+                subtitle: "Spotify",
+                description: spotifyname
+            })
+        ).draw();
+        var progressbar = document.createElement('div');
+        progressbar.setAttribute('style', 'width: '+0+'%;height: 10px;bottom: 0;position: absolute;transition:width 5s;-moz-transition:width 5s;-webkit-transition:width 5s;-o-transition:width 5s;background: green;');
+        element.getElementsByTagName("card")[1].setAttribute('style', 'position: relative;');
+        element.getElementsByTagName("card")[1].append(progressbar);
+        return element;
+    }
+    //shell.innerHTML = "";
+    //shell.append(list());
 
 
     registerEvent((data: any) => {
@@ -59,9 +67,16 @@ export const renderCards = () => {
         }
 
         if (data.spotify.is_playing) {
-            spotifylogo = data.spotify.item.album.images[0].url;
-            spotifyname = data.spotify.item.name + " - " + data.spotify.item.artists.map((artist: any) => artist.name).join(', ');
-            spotifydevice = data.spotify.device.name;
+            if (spotifyid!=data.spotify.item.id) {
+                spotifylogo = data.spotify.item.album.images[0].url;
+                spotifyname = data.spotify.item.name + " - " + data.spotify.item.artists.map((artist: any) => artist.name).join(', ');
+                spotifydevice = data.spotify.device.name;
+                spotifyid = data.spotify.item.id;
+                spotifyprogress = 0;
+                shell.innerHTML = "";
+            } else {
+                spotifyprogress = data.spotify.progress_ms / data.spotify.item.duration_ms * 100
+            }
         } else {
             spotifylogo = spotifylistening;
             if (data.spotify.item) {
@@ -71,8 +86,13 @@ export const renderCards = () => {
         }
 
 
-        shell.innerHTML = "";
+        if (shell.innerHTML == "")
         shell.append(list())
+
+        var progressbar: HTMLDivElement | null = document.querySelector("body > article > span:nth-child(3) > cardlist > card:nth-child(2) > div:nth-child(4)")
+        if (progressbar) {
+            progressbar.setAttribute('style', 'width: '+spotifyprogress+'%;height: 10px;bottom: 0;position: absolute;transition:width 5s;-moz-transition:width 5s;-webkit-transition:width 5s;-o-transition:width 5s;background: green;')
+        }
 
     })
     return shell;
