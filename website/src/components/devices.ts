@@ -3,7 +3,7 @@ import { registerEvent } from '../data/eventListener';
 
 import '../styles/devices.css';
 
-let batteryData: [string, number, number][] = []
+let batteryData: [string, number, boolean, number][] = []
 
 export const renderDevices = (): RenderElement => ({
     draw: () => {
@@ -12,28 +12,29 @@ export const renderDevices = (): RenderElement => ({
         registerEvent((data: any) => {
             batteryData = [];
             data.apple.forEach((device: any) => {
-                batteryData.push([device.name, device.battery, device.time])
+                batteryData.push([device.name, device.battery, device.charging, device.time])
             })
 
             skillsArea.innerHTML = ''
-            skillsArea.append(mySkills, ...batteryData.map(x => renderProgressBar(x[0], x[1], x[2])))
+            skillsArea.append(mySkills, ...batteryData.map(x => renderProgressBar(x[0], x[1], x[2], x[3])))
 
             shell.innerHTML = "";
             shell.append(skillsArea);
         })
         const skillsArea = custom('section', undefined, "skills-area");
         const mySkills = custom('h2', "MY DEVICES", 'my-skills')
-        const renderProgressBar = (name: string, progress: number, timestamp: number) => {
+        const renderProgressBar = (name: string, percent: number, charging: boolean, timestamp: number) => {
             const date = new Date(timestamp);
             const hours = date.getHours();
             const minutes = "0" + date.getMinutes();
             const seconds = "0" + date.getSeconds();
             const time = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
             const background = custom('div', undefined, 'skill-bar');
-            const foreground = custom('div', span(name + " - " + progress + "% - " + time))
-            foreground.style.width = `${progress}%`;
-            background.append(span(name + " - " + progress + "% - " + time), foreground)
-            return background
+            const string = name + " - "+(charging?'Charging at ':'') + percent + "% - " + time;
+            const foreground = custom('div', span(string));
+            foreground.style.width = `${percent}%`;
+            background.append(span(string), foreground);
+            return background;
         }
 
         shell.innerHTML = "";

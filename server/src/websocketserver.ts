@@ -37,9 +37,21 @@ service.get('/callback/', (res, req) => {
 service.get('/api/battery', (res, req) => {
     if (req.getQuery().split("password=")[1]==config.api_pw) {
         console.log(req.getQuery())
-        const percent: number = Math.round(+req.getQuery().replace("percentage=", "").split("&")[0]);
-        const name = req.getQuery().split("name=")[1].split('&')[0].replace('%20', ' ').replace('%20', ' ');
-        updateApplePercentage(name, percent)
+        const params: string[][] = req.getQuery().split('&').map(val=>val.split('='));
+        const percent: number = Math.round(+params.filter(val => val[0]=='percentage')[0][1]);
+        const name = params.filter(val => val[0]=='name')[0][1].split("%20").join(" ");
+        updateAppleStatus(name, percent, undefined)
+    }
+    res.end();
+})
+
+service.get('/api/charging', (res, req) => {
+    if (req.getQuery().split("password=")[1]==config.api_pw) {
+        console.log(req.getQuery())
+        const params: string[][] = req.getQuery().split('&').map(val=>val.split('='));
+        const charging: boolean = params.filter(val => val[0]=='charging')[0][1]==='true';
+        const name = params.filter(val => val[0]=='name')[0][1].split("%20").join(" ");
+        updateAppleStatus(name, undefined, charging)
     }
     res.end();
 })
@@ -51,6 +63,7 @@ const devices = config.devices.map(device => {
     return {
         name: device,
         battery: 0,
+        charging: false,
         time: 0
     }
 })
@@ -71,10 +84,13 @@ export function updateDiscord(message: any) {
     updateAllSockets(lastmessage)
 }
 
-function updateApplePercentage(name: string, percent: number) {
+function updateAppleStatus(name: string, battery: number | undefined, charging: boolean | undefined) {
     lastmessage.apple = lastmessage.apple.map(device => {
         if (device.name==name) {
-            device.battery = percent;
+            if (battery)
+            device.battery = battery;
+            if (charging!=undefined)
+            device.charging = charging;
             device.time = new Date().getTime()
         }
         return device;
