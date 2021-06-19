@@ -24,7 +24,7 @@ export const renderActivites = () => {
         activityData = data.discord[0].filter((x: any) => x.name != "Custom Status" && x.name != "Spotify")
             .map((data: any) => [
                 data.name,
-                data.details ? data.details+' - '+data.state :data.type.toLowerCase(),
+                data.details ? data.details+ (data.state!=null ? ' - '+data.state : '') :data.type.toLowerCase(),
                 new Date(data.timestamps.start).toLocaleString(),
                 data.applicationID ? `https://cdn.discordapp.com/app-assets/${data.applicationID}/${(data.assets.smallImage==null) ? data.assets.largeImage : data.assets.smallImage}.png` : ''
             ]);
