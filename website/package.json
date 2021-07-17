@@ -18,7 +18,7 @@
         }
     },
     "dependencies": {
-        "@lucsoft/webgen": "^1.17.18",
+        "@lucsoft/webgen": "^1.18.6",
         "@webpack-cli/serve": "^1.3.0",
         "css-loader": "^5.2.0",
         "css-minimizer-webpack-plugin": "^1.3.0",
