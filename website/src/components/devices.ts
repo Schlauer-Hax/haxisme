@@ -3,7 +3,7 @@ import { registerEvent } from '../data/eventListener';
 
 import '../styles/devices.css';
 
-let batteryData: [string, number, boolean, string, number][] = []
+let batteryData: [string, number, string, string, number][] = []
 
 export const renderDevices = (): RenderElement => ({
     draw: () => {
@@ -25,14 +25,14 @@ export const renderDevices = (): RenderElement => ({
         }, 'apple')
         const devicesArea = custom('section', undefined, "devices-area");
         const myDevices = custom('h2', "MY DEVICES", 'my-devices')
-        const renderProgressBar = (name: string, percent: number, charging: boolean, connection: string, timestamp: number) => {
+        const renderProgressBar = (name: string, percent: number, charging: string, connection: string, timestamp: number) => {
             const date = new Date(timestamp);
             const hours = date.getHours();
             const minutes = "0" + date.getMinutes();
             const seconds = "0" + date.getSeconds();
             const time = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
             const background = custom('div', undefined, 'device-bar');
-            const string = name + " - "+(charging?'Charging at ':'') + percent + "% - " + connection + ' - ' + time;
+            const string = name + " - "+(charging==='true'?'Charging at ':'') + percent + "% - " + connection + ' - ' + time;
             const foreground = custom('div', span(string));
             foreground.style.width = `${percent}%`;
             background.append(span(string), foreground);
