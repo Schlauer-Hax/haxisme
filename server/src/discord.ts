@@ -1,6 +1,6 @@
 import { Client } from "discord.js";
 import { config } from "../config";
-import { setLastDiscordMessage, updateDiscord } from "./websocketserver";
+import { updateDiscord } from "../app";
 
 
 export function start() {
@@ -12,8 +12,9 @@ export function start() {
     })
     client.on('ready', () => {
         client.users.fetch(config.userid).then(({ presence }) => {
-            setLastDiscordMessage(([presence.activities, presence.status]))
+            updateDiscord([presence.activities, presence.status])
         })
     })
     client.login(config.token);
+    return client;
 }

@@ -31,6 +31,6 @@ export const renderActivites = () => {
         shell.innerHTML = "";
         shell.append(list())
 
-    })
+    }, 'discord')
     return shell;
 }

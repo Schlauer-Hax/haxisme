@@ -1,9 +1,9 @@
-.skills-area {
+.devices-area {
     max-width: var(--max-width);
     margin: var(--gap) auto 2rem;
 }
 
-.my-skills {
+.my-devices {
     text-align: left;
     margin: 2.5rem 0 1rem 0;
     display: block;
@@ -12,7 +12,7 @@
     color: var(--on-card-text);
 }
 
-.skill-bar {
+.device-bar {
     background-color: var(--background-card);
     margin-bottom: var(--gap);
     border-radius: var(--border-radius);
@@ -20,7 +20,7 @@
     position: relative;
 }
 
-.skill-bar span {
+.device-bar span {
     display: inline-block;
     font-weight: 400;
     font-size: 1.5rem;
@@ -29,7 +29,7 @@
     padding: 0.6rem 0.8rem 0.48rem;
 }
 
-.skill-bar div {
+.device-bar div {
     position: absolute;
     z-index: 1;
     top: 0;
@@ -37,15 +37,15 @@
     overflow: hidden;
 }
 
-.skill-bar div.charging {
+.device-bar div.charging {
     background: repeating-linear-gradient( 45deg, hsl(141, 68%, 50%), hsl(141, 68%, 50%) 10px, hsl(141, 68%, 25%) 10px, hsl(141, 68%, 25%) 20px);
 }
 
-.skill-bar div span {
+.device-bar div span {
     color: var(--on-background-text);
 }
 
-.skills {
+.devices {
     font-size: 1.2rem;
     font-weight: 400;
     word-spacing: 0.4rem;

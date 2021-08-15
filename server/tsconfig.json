@@ -12,7 +12,8 @@
         "noImplicitReturns": true,
         "noImplicitAny": false,
         "allowSyntheticDefaultImports": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "esModuleInterop": true
     },
     "exclude": [
         "node_modules",
