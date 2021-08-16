@@ -25,7 +25,7 @@ let lastmessage = {
 let olddata;
 export function updateSpotify(message) {
     if (olddata) {
-        if (message !== {}) {
+        if (message !== {} && message.item) {
             if (olddata.is_playing !== message.is_playing ||
                 (olddata.item.id && message.item.id && olddata.item.id !== message.item.id) ||
                 (message.is_playing && olddata.progress_ms / 1000 + 4 > message.progress_ms / 1000) ||
