@@ -22,14 +22,23 @@ let lastmessage = {
     spotify: ''
 };
 
+let olddata;
 export function updateSpotify(message) {
+    if (olddata) {
+        if (olddata.is_playing !== message.is_playing ||
+            olddata.item.id !== message.item.id ||
+            olddata.progress_ms + 4 > message.progress_ms ||
+            olddata.progress_ms < message.progress_ms - 6) {
+            updateWebsockets({ spotify: message });
+        }
+    } else updateWebsockets({ spotify: message });
+    olddata = message;
     lastmessage.spotify = message;
-    updateWebsockets({spotify: message});
 }
 
 export function updateDiscord(message) {
     lastmessage.discord = message;
-    updateWebsockets({discord: message});
+    updateWebsockets({ discord: message });
 }
 
 function updateWebsockets(message) {
@@ -55,7 +64,7 @@ app.get('/api/data', (req, res) => {
         })
         device.time = new Date().getTime()
         lastmessage.apple[index] = device;
-        updateWebsockets({apple: lastmessage.apple});
+        updateWebsockets({ apple: lastmessage.apple });
     }
     res.end()
 })
