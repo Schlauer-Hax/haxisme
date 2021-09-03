@@ -18,13 +18,12 @@ export const renderDevices = (): RenderElement => ({
             })
 
             devicesArea.innerHTML = ''
-            devicesArea.append(myDevices, ...batteryData.map(x => renderProgressBar(x[0], x[1], x[2], x[3], x[4])))
+            devicesArea.append(...batteryData.map(x => renderProgressBar(x[0], x[1], x[2], x[3], x[4])))
 
             shell.innerHTML = "";
             shell.append(devicesArea);
         }, 'apple')
         const devicesArea = custom('section', undefined, "devices-area");
-        const myDevices = custom('h2', "MY DEVICES", 'my-devices')
         const renderProgressBar = (name: string, percent: number, charging: string, connection: string, timestamp: number) => {
             const date = new Date(timestamp);
             const hours = date.getHours();

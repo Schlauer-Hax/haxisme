@@ -1,4 +1,4 @@
-export type EventType = 'apple' | 'discord' | 'spotify';
+export type EventType = 'apple' | 'discord' | 'spotify' | 'audio';
 const events: any[] = [];
 export function registerEvent(event: any, type: EventType) {
     events.push([event, type]);

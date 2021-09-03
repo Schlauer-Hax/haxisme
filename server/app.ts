@@ -19,7 +19,12 @@ let lastmessage = {
             time: 0
         }
     }),
-    spotify: ''
+    spotify: '',
+    audio: {
+        dB: 'No Data',
+        last: 'No Data',
+        duration: 'No Data'
+    }
 };
 
 let olddata;
@@ -27,7 +32,7 @@ export function updateSpotify(message) {
     if (olddata) {
         if (message !== {} && message.item) {
             if (olddata.is_playing !== message.is_playing ||
-                (olddata.item.id && message.item.id && olddata.item.id !== message.item.id) ||
+                (olddata.item && olddata.item.id && message.item.id && olddata.item.id !== message.item.id) ||
                 (message.is_playing && olddata.progress_ms / 1000 + 4 > message.progress_ms / 1000) ||
                 (message.is_playing && olddata.progress_ms / 1000 < message.progress_ms / 1000 - 6)) {
                 updateWebsockets({ spotify: message });
@@ -41,6 +46,11 @@ export function updateSpotify(message) {
 export function updateDiscord(message) {
     lastmessage.discord = message;
     updateWebsockets({ discord: message });
+}
+
+function updateAudio(message) {
+    lastmessage.audio = message;
+    updateWebsockets({audio: message});
 }
 
 function updateWebsockets(message) {
@@ -69,6 +79,18 @@ app.get('/api/data', (req, res) => {
         updateWebsockets({ apple: lastmessage.apple });
     }
     res.end()
+})
+
+app.get('/api/audio', (req, res) => {
+    console.log(req.query)
+    if (req.query.password === config.api_pw) {
+        updateAudio({
+            dB: Math.round(Number(req.query.dB))+' dB',
+            last: req.query.last,
+            duration: Math.round(Number(req.query.duration))+' min'
+        })
+    }
+    res.end();
 })
 
 app.ws('/', (ws) => {

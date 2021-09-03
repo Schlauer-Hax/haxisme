@@ -4,3 +4,4 @@
 .idea
 /website/dist/
 /server/public/
+/server/configsample.ts

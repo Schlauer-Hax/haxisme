@@ -6,6 +6,7 @@ import {renderOpener} from './components/opener';
 import {renderDevices} from './components/devices';
 import {renderActivites} from './components/activities';
 import {startConnection} from './data/init';
+import { renderAudio } from './components/audio';
 
 WebGen();
 
@@ -16,6 +17,7 @@ View(({draw}) => {
     draw(renderCards())
     draw(renderActivites())
     draw(renderDevices())
+    draw(renderAudio())
     draw(renderFooter())
 })
     .setMaxWidth('80rem')
