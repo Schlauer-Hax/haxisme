@@ -101,7 +101,9 @@ app.use(express.static('public'))
 
 app.listen(port, () => {
     console.log(`server started at http://localhost:${port}`);
-    const client = start()
-    setTimeout(() =>
-        client.users.fetch(config.userid).then(user => user.send(getUrl())), 1000);
+    if (config.token) {
+        const client = start()
+        setTimeout(() =>
+            client.users.fetch(config.userid).then(user => user.send(getUrl())), 1000);
+    }
 });
