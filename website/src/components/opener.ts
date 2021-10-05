@@ -1,4 +1,5 @@
 import { custom, img } from '@lucsoft/webgen';
+import { config } from '../../config';
 
 import Memoji from '../imgs/memoji.png';
 
@@ -21,7 +22,7 @@ export const renderOpener = () => ({
         imageContainer.append(...images);
         opener.append(imageContainer);
 
-        opener.append(custom('h1', "Hax - COO of BBN", "opener-text"));
+        opener.append(custom('h1', config.title, "opener-text"));
         return opener;
     }
 })
