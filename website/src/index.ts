@@ -19,7 +19,7 @@ View(({draw}) => {
     draw(renderCards())
     draw(renderActivites())
     draw(renderDevices())
-    draw(renderAudio())
+    // draw(renderAudio())
     draw(renderFooter())
 })
     .setMaxWidth('80rem')
