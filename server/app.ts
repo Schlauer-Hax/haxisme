@@ -67,7 +67,9 @@ app.get('/callback/', (req, res) => {
 app.get('/api/data', (req, res) => {
     const entries = Object.entries(req.query);
     if (req.query.password === config.api_pw) {
-        const device = lastmessage.apple.filter(device => device.name === req.query.name)?.[0];
+        const possibledevices = lastmessage.apple.filter(device => device.name === req.query.name);
+        if (possibledevices.length===0) return
+        const device = possibledevices[0];
         const index = lastmessage.apple.indexOf(device);
         entries.forEach(param => {
             if (Object.entries(device).filter(entry => entry[0] === param[0]).length === 1) {

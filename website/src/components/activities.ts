@@ -25,7 +25,7 @@ export const renderActivites = () => {
             .map((data: any) => [
                 data.name,
                 data.details ? data.details+ (data.state!=null ? ' - '+data.state : '') :data.type.toLowerCase(),
-                new Date(data.timestamps.start).toLocaleString(),
+                new Date(data.timestamps ? data.timestamps.start ? data.timestamps.start : data.timestamps.end ? data.timestamps.end : 0 : 0).toLocaleString(),
                 data.applicationID && data.assets ? `https://cdn.discordapp.com/app-assets/${data.applicationID}/${(data.assets.smallImage==null) ? data.assets.largeImage : data.assets.smallImage}.png` : ''
             ]);
         shell.innerHTML = "";
