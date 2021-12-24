@@ -1,4 +1,4 @@
-import { Card, modernCard, span } from '@lucsoft/webgen';
+import { draw, Grid, modernCard, span } from '@lucsoft/webgen';
 import { registerEvent } from '../data/eventListener';
 
 import discordlogoonline from '../imgs/discord_online.svg';
@@ -13,30 +13,30 @@ export const renderCards = () => {
     const space = span(undefined);
 
     const spotifycard = (logo: string, title: string, device: string) => {
-        const element = Card({},
+        const element = draw(Grid({},
             modernCard({
                 align: "right",
                 icon: logo,
                 title: device,
                 subtitle: "Spotify",
                 description: title
-            })).draw();
-            var progressbar = document.createElement('div');
-            progressbar.setAttribute('style', progressbarStyle(0, 0));
-            element.getElementsByTagName("card")[0].setAttribute('style', 'position: relative;');
-            element.getElementsByTagName("card")[0].append(progressbar);
-            return element.getElementsByTagName('card')[0];
-        }
+            })));
+        var progressbar = document.createElement('div');
+        progressbar.setAttribute('style', progressbarStyle(0, 0));
+        element.getElementsByTagName("card")[ 0 ].setAttribute('style', 'position: relative;');
+        element.getElementsByTagName("card")[ 0 ].append(progressbar);
+        return element.getElementsByTagName('card')[ 0 ];
+    }
 
     const discordcard = (logo: string, title: string) =>
-        Card({},
+        draw(Grid({},
             modernCard({
                 align: "right",
                 icon: logo,
                 title: title,
                 subtitle: "Discord",
                 description: "Add me: Hax#6775"
-            })).draw().getElementsByTagName('card')[0];
+            }))).getElementsByTagName('card')[ 0 ];
 
     const cardlist = document.createElement('cardlist');
     cardlist.appendChild(discordcard(discordlogoonline, 'Online'));
@@ -45,7 +45,7 @@ export const renderCards = () => {
 
     registerEvent((data: any) => {
         let discordlogo = discordlogoonline;
-        const status = data.discord[1];
+        const status = data.discord[ 1 ];
         switch (status) {
             case "idle":
                 discordlogo = discordlogoidle;
@@ -72,7 +72,7 @@ export const renderCards = () => {
         let progresstime: any;
 
         if (data.spotify.is_playing) {
-            logo = data.spotify.item.album.images[0].url;
+            logo = data.spotify.item.album.images[ 0 ].url;
             title = data.spotify.item.name + " - " + data.spotify.item.artists.map((artist: any) => artist.name).join(', ');
             device = data.spotify.device.name;
 
@@ -94,11 +94,11 @@ export const renderCards = () => {
         cardlist.removeChild(cardlist.lastChild!);
         cardlist.appendChild(spotifycard(logo, title, device));
 
-        const progressbar = cardlist.lastElementChild?.getElementsByTagName('div')[1];
+        const progressbar = cardlist.lastElementChild?.getElementsByTagName('div')[ 1 ];
         if (progressbar) {
-            progressbar.setAttribute('style', progressbarStyle(progressstart, progresstime/1000))
+            progressbar.setAttribute('style', progressbarStyle(progressstart, progresstime / 1000))
             setTimeout(() => {
-                progressbar.setAttribute('style', progressbarStyle(100, progresstime/1000))
+                progressbar.setAttribute('style', progressbarStyle(100, progresstime / 1000))
             }, 100)
         }
     }, 'spotify')

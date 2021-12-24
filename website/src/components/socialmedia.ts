@@ -1,21 +1,18 @@
-import { custom, RenderElement, Button } from '@lucsoft/webgen';
+import { custom, Button, draw, Component, Color } from '@lucsoft/webgen';
 import { config } from '../../config';
 
-export const renderSocialmedia = (): RenderElement => ({
+export const renderSocialmedia = (): Component => ({
     draw: () => {
         const socialdiv = custom('div', undefined)
-        const button = Button({
-            big: true,
-            list: config.links.map(link => {
-                return {
+        config.links.map(link => {
+            const button = draw(
+                Button({
                     text: link.title,
-                    onclick: () => {
-                        window.open(link.url)
-                    }
-                }
-            })
-        }).draw()
-        socialdiv.appendChild(button)
+                    href: link.url,
+                    color: Color.Disabled
+                }))
+            socialdiv.appendChild(button)
+        })
         return socialdiv
     }
 })

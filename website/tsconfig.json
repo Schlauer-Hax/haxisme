@@ -1,18 +1,14 @@
 {
     "compilerOptions": {
         "incremental": true,
-        "target": "es2020",
+        "target": "ESNext",
         "module": "ESNext",
         "strict": true,
         "outDir": "bin",
-        "types": [
-            "node"
-        ],
         "emitDecoratorMetadata": false,
         "moduleResolution": "node",
         "typeRoots": [
-            "./custom.d.ts",
-            "./node_modules/@types"
+            "./custom.d.ts"
         ]
     }
 }
