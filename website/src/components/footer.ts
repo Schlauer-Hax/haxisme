@@ -7,7 +7,7 @@ export const renderFooter = () => ({
         const footer = span(undefined, 'footer');
         const right = span(undefined);
         right.innerHTML = `<a href="https://bbn.one/p/imprint.html">Imprint</a>`
-        footer.append(span("HaxIs.me – Copyright 2021"), right);
+        footer.append(span("HaxIs.me – Copyright 2022"), right);
         return footer;
     }
 })
