@@ -18,7 +18,7 @@
 }
 
 .image {
-    animation: fly 7s cubic-bezier(0.59, 0.35, 0.2, 1.07) infinite;
+    animation: fly 7s cubic-bezier(0.3, 4.35, 0.2, 1.07) infinite;
 }
 
 @keyframes fly {
