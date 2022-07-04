@@ -1,5 +1,4 @@
-/server/node_modules/
-/website/node_modules/
+node_modules/
 /server/config.ts
 .idea
 /website/dist/

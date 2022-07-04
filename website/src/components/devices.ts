@@ -1,24 +1,24 @@
-import { custom, RenderElement, span } from '@lucsoft/webgen';
+import { Component, custom, span } from '@lucsoft/webgen';
 import { registerEvent } from '../data/eventListener';
 
 import '../styles/devices.css';
 
-let batteryData: [string, number, string, string, number][] = []
+let batteryData: [ string, number, string, string, number ][] = []
 
-export const renderDevices = (): RenderElement => ({
+export const renderDevices = (): Component => ({
     draw: () => {
         const shell = span(undefined);
 
         registerEvent((data: any) => {
             if (data.apple === '') return;
-            
+
             batteryData = [];
             data.apple.forEach((device: any) => {
-                batteryData.push([device.name, device.battery, device.charging, device.connection, device.time])
+                batteryData.push([ device.name, device.battery, device.charging, device.connection, device.time ])
             })
 
             devicesArea.innerHTML = ''
-            devicesArea.append(...batteryData.map(x => renderProgressBar(x[0], x[1], x[2], x[3], x[4])))
+            devicesArea.append(...batteryData.map(x => renderProgressBar(x[ 0 ], x[ 1 ], x[ 2 ], x[ 3 ], x[ 4 ])))
 
             shell.innerHTML = "";
             shell.append(devicesArea);
@@ -31,7 +31,7 @@ export const renderDevices = (): RenderElement => ({
             const seconds = "0" + date.getSeconds();
             const time = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
             const background = custom('div', undefined, 'device-bar');
-            const string = name + " - "+(charging==='true'?'Charging at ':'') + percent + "% - " + connection + ' - ' + time;
+            const string = name + " - " + (charging === 'true' ? 'Charging at ' : '') + percent + "% - " + connection + ' - ' + time;
             const foreground = custom('div', span(string));
             foreground.style.width = `${percent}%`;
             background.append(span(string), foreground);

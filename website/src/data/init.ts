@@ -5,9 +5,9 @@ export function startConnection() {
     websocket.onmessage = (message) => {
         const json = JSON.parse(message.data);
         Object.keys(json).forEach(key => {
-            const data = json[key];
+            const data = json[ key ];
             if (data !== '') {
-                emitEvent({[key]: json[key]}, key as EventType)
+                emitEvent({ [ key ]: json[ key ] }, key as EventType)
             }
         })
     };

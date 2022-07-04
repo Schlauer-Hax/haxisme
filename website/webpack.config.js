@@ -37,7 +37,7 @@ module.exports = (_, mode) => {
             clean: true
         },
         resolve: {
-            extensions: [".js", ".ts"]
+            extensions: [ ".js", ".ts" ]
         },
         module: {
             rules: [
@@ -62,27 +62,29 @@ module.exports = (_, mode) => {
             ]
         },
         devServer: {
-            contentBase: "./dist",
+            static: {
+                directory: "./dist"
+            },
             port: 9090,
             host: '0.0.0.0'
         },
         plugins: [
-            ...(generateProfile ? [new BundleAnalyzerPlugin()] : []),
+            ...(generateProfile ? [ new BundleAnalyzerPlugin() ] : []),
             new MiniCssExtractPlugin({
                 filename: '[name].css',
                 chunkFilename: '[id].css'
             }),
-            new CopyPlugin({ 
-                patterns: [ 
-                 // relative path is from src
-                 { from: './src/imgs/favicon.ico' }, // <- your path to favicon
+            new CopyPlugin({
+                patterns: [
+                    // relative path is from src
+                    { from: './src/imgs/favicon.ico' }, // <- your path to favicon
                 ]
-             }),
-            createPage('index', ['main']),
+            }),
+            createPage('index', [ 'main' ]),
         ],
         optimization: isProduction ? {
             minimize: true,
-            minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
+            minimizer: [ new TerserPlugin(), new CssMinimizerPlugin() ],
             splitChunks: {
                 chunks: 'async',
                 maxAsyncRequests: 30,
