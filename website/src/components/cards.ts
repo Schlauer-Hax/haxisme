@@ -72,8 +72,15 @@ export const renderCards = () => {
         let progresstime: any;
 
         if (data.spotify.is_playing) {
-            logo = data.spotify.item.album.images[0].url;
-            title = data.spotify.item.name + " - " + data.spotify.item.artists.map((artist: any) => artist.name).join(', ');
+            title = data.spotify.item.name + ' - '
+            if (data.spotify.item.album) {
+                logo = data.spotify.item.album.images[0].url;    
+                title += data.spotify.item.artists.map((artist: any) => artist.name).join(', ');
+            } else if (data.spotify.item.show) {
+                logo = data.spotify.item.show.images[0].url;
+                title += data.spotify.item.show.publisher;
+            }
+            
             device = data.spotify.device.name;
 
             progressstart = (data.spotify.progress_ms / data.spotify.item.duration_ms) * 100;
@@ -81,7 +88,13 @@ export const renderCards = () => {
         } else {
             logo = spotifylistening;
             if (data.spotify.item) {
-                title = "Last song: " + data.spotify.item.name + " - " + data.spotify.item.artists.map((artist: any) => artist.name).join(', ');
+                if (data.spotify.item.album) {
+                    title = `Last song: ${data.spotify.item.name} - ${data.spotify.item.artists.map((artist: any) => artist.name).join(', ')}`;
+                } else if (data.spotify.item.show) {
+                    title = `Last episode: ${data.spotify.item.name} - ${data.spotify.item.show.publisher}`;
+                } else {
+                    title = 'Paused';
+                }
             } else {
                 title = 'Paused';
             }

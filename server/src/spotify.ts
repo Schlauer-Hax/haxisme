@@ -28,7 +28,7 @@ export function auth(code) {
 
                 setInterval(() => {
                     // Get Information About The User's Current Playback State
-                    spotifyApi.getMyCurrentPlaybackState()
+                    spotifyApi.getMyCurrentPlaybackState({additional_types: 'track,episode'})
                         .then(function (data) {
                             // Output items
                             updateSpotify(data.body)
