@@ -6,7 +6,7 @@ export const renderFooter = () => ({
     draw: () => {
         const footer = span(undefined, 'footer');
         const right = span(undefined);
-        right.innerHTML = `<a href="https://bbn.one/p/imprint.html">Imprint</a>`
+        right.innerHTML = `<a href="https://bbn.one/p/imprint.html">Imprint</a><a rel="me" href="https://chaos.social/@hax">Mastodon</a>`
         footer.append(span("HaxIs.me – Copyright 2022"), right);
         return footer;
     }
