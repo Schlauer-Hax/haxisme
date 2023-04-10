@@ -1,5 +1,5 @@
 import SpotifyWebApi from "spotify-web-api-node";
-import { config } from "../config";
+import * as config from "../config.json";
 import { updateSpotify } from "../app";
 
 const spotifyApi = new SpotifyWebApi({

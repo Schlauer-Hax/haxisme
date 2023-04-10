@@ -1,5 +1,5 @@
 import express from 'express';
-import { config } from './config';
+import * as config from './config.json';
 import expressWs from 'express-ws';
 import { auth, getUrl } from './src/spotify';
 import { start } from './src/discord';
@@ -30,7 +30,7 @@ let lastmessage = {
 let olddata;
 export function updateSpotify(message) {
     if (olddata) {
-        if (message !== {} && message.item) {
+        if (message.item) {
             if (olddata.is_playing !== message.is_playing ||
                 (olddata.item && olddata.item.id && message.item.id && olddata.item.id !== message.item.id) ||
                 (message.is_playing && olddata.progress_ms / 1000 + 4 > message.progress_ms / 1000) ||

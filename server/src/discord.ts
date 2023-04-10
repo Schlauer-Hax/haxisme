@@ -1,5 +1,5 @@
 import { Client } from "discord.js";
-import { config } from "../config";
+import * as config from "../config.json";
 import { updateDiscord } from "../app";
 
 

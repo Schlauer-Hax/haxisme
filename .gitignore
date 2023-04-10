@@ -1,7 +1,6 @@
 /server/node_modules/
 /website/node_modules/
-/server/config.ts
+/server/config.json
 .idea
 /website/dist/
 /server/public/
-/server/configsample.ts
