@@ -17,10 +17,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push aocserver
+      - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: .
           push: true
           tags: ghcr.io/schlauer-hax/haxisme
           labels: |
