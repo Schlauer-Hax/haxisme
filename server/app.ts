@@ -1,14 +1,8 @@
-import express from 'express';
-import * as config from './config.json';
-import expressWs from 'express-ws';
-import { auth, getUrl } from './src/spotify';
-import { start } from './src/discord';
+import config from "./config.json" assert { type: "json" };
+import { startBot } from "./src/discord.ts";
+import { getRedirectURL, auth } from "./src/spotify.ts";
 
-const ew = expressWs(express());
-const app = ew.app;
-const port = 3000;
-
-let lastmessage = {
+const lastmessage = {
     discord: '',
     apple: config.devices.map(device => {
         return {
@@ -19,93 +13,71 @@ let lastmessage = {
             time: 0
         }
     }),
-    spotify: '',
-    audio: {
-        dB: 'No Data',
-        last: 'No Data',
-        duration: 'No Data'
-    }
+    spotify: ''
 };
 
-let olddata;
-export function updateSpotify(message) {
-    if (olddata) {
-        if (message.item) {
-            if (olddata.is_playing !== message.is_playing ||
-                (olddata.item && olddata.item.id && message.item.id && olddata.item.id !== message.item.id) ||
-                (message.is_playing && olddata.progress_ms / 1000 + 4 > message.progress_ms / 1000) ||
-                (message.is_playing && olddata.progress_ms / 1000 < message.progress_ms / 1000 - 6)) {
-                updateWebsockets({ spotify: message });
-            }
-        }
-    } else updateWebsockets({ spotify: message });
-    olddata = message;
+const connections: WebSocket[] = [];
+
+export function updateSpotify(message: any) {
     lastmessage.spotify = message;
+    pushWebsockets({ spotify: message })
 }
 
-export function updateDiscord(message) {
+export function updateDiscord(message: any) {
     lastmessage.discord = message;
-    updateWebsockets({ discord: message });
+    pushWebsockets({ discord: message });
 }
 
-function updateAudio(message) {
-    lastmessage.audio = message;
-    updateWebsockets({audio: message});
-}
-
-function updateWebsockets(message) {
-    ew.getWss().clients.forEach(client =>
+function pushWebsockets(message: any) {
+    connections.forEach(client =>
         client.send(JSON.stringify(message))
     );
 }
 
-app.get('/callback/', (req, res) => {
-    auth(req.query.code);
-    res.end();
-})
+async function startEverything() {
+    const client = await startBot()
+    setTimeout(() =>
+        client.users.fetch(config.userid).then(user => user.send(`${config.url}/api/spotify/redirect`)), 1000);
+}
+await startEverything();
 
-app.get('/api/data', (req, res) => {
-    const entries = Object.entries(req.query);
-    if (req.query.password === config.api_pw) {
-        const possibledevices = lastmessage.apple.filter(device => device.name === req.query.name);
-        if (possibledevices.length===0) return
-        const device = possibledevices[0];
-        const index = lastmessage.apple.indexOf(device);
-        entries.forEach(param => {
-            if (Object.entries(device).filter(entry => entry[0] === param[0]).length === 1) {
-                device[param[0]] = param[1]
-            }
-        })
-        device.time = new Date().getTime()
-        lastmessage.apple[index] = device;
-        updateWebsockets({ apple: lastmessage.apple });
+await Deno.serve({ port: 8000 }, async (rsp) => {
+    const url = new URL(rsp.url)
+    if (url.pathname == "/api/ws") {
+        const { response, socket } = Deno.upgradeWebSocket(rsp);
+        connections.push(socket);
+        socket.onopen = () =>
+            socket.send(JSON.stringify(lastmessage));
+        socket.onclose = () =>
+            connections.splice(connections.indexOf(socket), 1);
+
+        return response;
+    } else if (url.pathname == "/api/spotify/redirect") {
+        return new Response("", { statusText: "Redirecting", status: 302, headers: { "Location": getRedirectURL() } });
+    } else if (url.pathname == "/api/spotify/callback") {
+        const code = url.searchParams.get("code");
+        if (code) {
+            await auth(code);
+            return new Response("", { statusText: "Redirecting", status: 302, headers: { "Location": config.url } });
+        } else {
+            return new Response("Missing Auth Code. Please try again!", { statusText: "No code", status: 400 });
+        }
+    } else if (url.pathname == "/api/battery") {
+        const entries = url.searchParams;
+        if (entries.get("password") === config.api_pw) {
+            const possibledevices = lastmessage.apple.filter(device => device.name === entries.get("name"));
+            if (possibledevices.length === 0) return new Response("Device not found", { statusText: "Device not found", status: 404 });
+            const device = possibledevices[ 0 ];
+            const index = lastmessage.apple.indexOf(device);
+            device.battery = entries.get("percentage") || device.battery;
+            device.connection = entries.get("connection") || device.connection;
+            device.charging = entries.get("charging") || device.charging;
+            device.time = new Date().getTime()
+            lastmessage.apple[ index ] = device;
+            pushWebsockets({ apple: lastmessage.apple });
+            return new Response("OK", { statusText: "OK", status: 200 });
+        }
+        return new Response("Unauthorized", { statusText: "Unauthorized", status: 401 });
     }
-    res.end()
-})
-
-app.get('/api/audio', (req, res) => {
-    console.log(req.query)
-    if (req.query.password === config.api_pw) {
-        updateAudio({
-            dB: Math.round(Number(req.query.dB))+' dB',
-            last: req.query.last,
-            duration: Math.round(Number(req.query.duration))+' min'
-        })
-    }
-    res.end();
-})
-
-app.ws('/', (ws) => {
-    ws.send(JSON.stringify(lastmessage));
-});
-
-app.use(express.static('public'))
-
-app.listen(port, () => {
-    console.log(`server started at http://localhost:${port}`);
-    if (config.token) {
-        const client = start()
-        setTimeout(() =>
-            client.users.fetch(config.userid).then(user => user.send(getUrl())), 1000);
-    }
-});
+    return new Response("404 Not Found", { statusText: "Not found", status: 404 });
+}).finished;

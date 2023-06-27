@@ -1,36 +1,28 @@
-import {Card, defaultCard, modernCard, span} from '@lucsoft/webgen';
-import { registerEvent } from '../data/eventListener';
-
+import { Grid, Entry, Vertical, BasicLabel, PlainText, Image, Box } from "webgen/mod.ts";
+import { state } from "../data/state.ts";
 import '../styles/devices.css';
-let activityData: [string, string, string, string][] = [
-]
+import { HeavyReRender } from "shared/list.ts";
 
-export const renderActivites = () => {
-
-    const shell = span(undefined)
-
-    const list = () => Card({  },
-        ...activityData.map(data => {
-            return modernCard({
-                title: data[0],
-                description: data[1],
-                subtitle: data[2],
-                icon: data[3]
-            })
-        })).draw();
-    shell.innerHTML = "";
-    shell.append(list());
-    registerEvent((data: any) => {
-        activityData = data.discord[0].filter((x: any) => x.name != "Custom Status" && x.name != "Spotify")
-            .map((data: any) => [
-                data.name,
-                data.details ? data.details+ (data.state!=null ? ' - '+data.state : '') :data.type.toLowerCase(),
-                new Date(data.timestamps ? data.timestamps.start ? data.timestamps.start : data.timestamps.end ? data.timestamps.end : 0 : 0).toLocaleString(),
-                data.applicationID && data.assets ? `https://cdn.discordapp.com/app-assets/${data.applicationID}/${(data.assets.smallImage==null) ? data.assets.largeImage : data.assets.smallImage}.png` : ''
-            ]);
-        shell.innerHTML = "";
-        shell.append(list())
-
-    }, 'discord')
-    return shell;
+export function renderDiscordActivities() {
+    return HeavyReRender(state.$discord, (it) => Grid(
+        ...it.activities.map((ti) =>
+            Entry(
+                Grid(
+                    Vertical(
+                        PlainText(new Date(ti.timestamps?.start ?? 0).toLocaleString())
+                            .setFont(1, 600)
+                            .addClass("leading-text"),
+                        BasicLabel({
+                            title: ti.name,
+                            subtitle: ti.details ?? "No Details",
+                        }),
+                    )
+                ).addSuffix(ti.assets ? Image(`https://cdn.discordapp.com/app-assets/${ti.application_id}/${(ti.assets.small_image == null) ? ti.assets.large_image : ti.assets.small_image}.png`, "Discord Image") : Box()).addClass("discord-image")
+                    .setRawColumns("auto 5.5rem")
+            )
+        )
+    )
+        .setGap("var(--gap)")
+        .setEvenColumns(2)
+    )
 }

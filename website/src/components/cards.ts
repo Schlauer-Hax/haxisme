@@ -1,120 +1,129 @@
-import { Card, modernCard, span } from '@lucsoft/webgen';
-import { registerEvent } from '../data/eventListener';
+import DC_Online from '../../static/discord_online.svg';
+import DC_Idle from '../../static/discord_idle.svg';
+import DC_DND from '../../static/discord_dnd.svg';
+import DC_Offline from '../../static/discord_offline.svg';
+import Spotify_Listening from '../../static/spotify_listening.svg';
+import Spotify_Not_Listening from '../../static/spotify_notlistening.svg';
+import '../styles/cards.css';
+import { BasicLabel, Custom, Entry, Grid, Image, PlainText, Pointer, Vertical, asPointer, createElement, ref } from "webgen/mod.ts";
+import { HeavyReRender } from "shared/list.ts"
+import { state } from "../data/state.ts";
 
-import discordlogoonline from '../imgs/discord_online.svg';
-import discordlogoidle from '../imgs/discord_idle.svg';
-import discordlogodnd from '../imgs/discord_dnd.svg';
-import discordlogooffline from '../imgs/discord_offline.svg';
-import spotifylistening from '../imgs/spotify_listening.svg';
+const discordIcons = {
+    "online": DC_Online,
+    "idle": DC_Idle,
+    "dnd": DC_DND,
+    "offline": DC_Offline,
+};
 
-const progressbarStyle = (width: number, time: number) => `width: ${width}%;height: 10px;bottom: 0;position: absolute;transition:width linear ${time}s;background: #29d665;border-radius: 0.6rem;`
+type DiscordIcons = keyof typeof discordIcons;
 
-export const renderCards = () => {
-    const space = span(undefined);
+export function renderDiscordStatus() {
+    return Entry(
+        Grid(
+            Vertical(
+                PlainText("discord")
+                    .setFont(1, 600)
+                    .addClass("leading-text"),
+                BasicLabel({
+                    title: ref`${state.discord.$status.map(it => it.toUpperCase())}`,
+                    subtitle: "Add me: hax6775"
+                })
+            )
+        ).addSuffix(
+            HeavyReRender(state.$discord
+                .map(({ status }) => discordIcons[ <DiscordIcons>status ]), icon =>
+                Image(icon, "Discord Status Image")
+                    .addClass("discord-image")
+            )
+        ).setRawColumns("auto 5rem")
+    )
+}
 
-    const spotifycard = (logo: string, title: string, device: string) => {
-        const element = Card({},
-            modernCard({
-                align: "right",
-                icon: logo,
-                title: device,
-                subtitle: "Spotify",
-                description: title
-            })).draw();
-            var progressbar = document.createElement('div');
-            progressbar.setAttribute('style', progressbarStyle(0, 0));
-            element.getElementsByTagName("card")[0].setAttribute('style', 'position: relative;');
-            element.getElementsByTagName("card")[0].append(progressbar);
-            return element.getElementsByTagName('card')[0];
-        }
-
-    const discordcard = (logo: string, title: string) =>
-        Card({},
-            modernCard({
-                align: "right",
-                icon: logo,
-                title: title,
-                subtitle: "Discord",
-                description: "Add me: Hax#6775"
-            })).draw().getElementsByTagName('card')[0];
-
-    const cardlist = document.createElement('cardlist');
-    cardlist.appendChild(discordcard(discordlogoonline, 'Online'));
-    cardlist.appendChild(spotifycard(spotifylistening, 'No Data Received', 'Not Connected'));
-    space.appendChild(cardlist);
-
-    registerEvent((data: any) => {
-        let discordlogo = discordlogoonline;
-        const status = data.discord[1];
-        switch (status) {
-            case "idle":
-                discordlogo = discordlogoidle;
-                break;
-
-            case "dnd":
-                discordlogo = discordlogodnd;
-                break;
-            case "offline":
-                discordlogo = discordlogooffline;
-                break;
-        }
-
-        cardlist.removeChild(cardlist.firstChild!);
-        cardlist.insertBefore(discordcard(discordlogo, status.charAt(0).toUpperCase() + status.slice(1)), cardlist.firstChild);
-    }, 'discord');
-
-    registerEvent((data: any) => {
-        let logo;
-        let title;
-        let device;
-
-        let progressstart;
-        let progresstime: any;
-
-        if (data.spotify.is_playing) {
-            title = data.spotify.item.name + ' - '
-            if (data.spotify.item.album) {
-                logo = data.spotify.item.album.images[0].url;    
-                title += data.spotify.item.artists.map((artist: any) => artist.name).join(', ');
-            } else if (data.spotify.item.show) {
-                logo = data.spotify.item.show.images[0].url;
-                title += data.spotify.item.show.publisher;
-            }
-            
-            device = data.spotify.device.name;
-
-            progressstart = (data.spotify.progress_ms / data.spotify.item.duration_ms) * 100;
-            progresstime = data.spotify.item.duration_ms - data.spotify.progress_ms;
-        } else {
-            logo = spotifylistening;
-            if (data.spotify.item) {
-                if (data.spotify.item.album) {
-                    title = `Last song: ${data.spotify.item.name} - ${data.spotify.item.artists.map((artist: any) => artist.name).join(', ')}`;
-                } else if (data.spotify.item.show) {
-                    title = `Last episode: ${data.spotify.item.name} - ${data.spotify.item.show.publisher}`;
-                } else {
-                    title = 'Paused';
-                }
-            } else {
-                title = 'Paused';
-            }
-            device = "Playback Paused";
-
-            progressstart = 0;
-            progresstime = 0;
-        }
-
-        cardlist.removeChild(cardlist.lastChild!);
-        cardlist.appendChild(spotifycard(logo, title, device));
-
-        const progressbar = cardlist.lastElementChild?.getElementsByTagName('div')[1];
-        if (progressbar) {
-            progressbar.setAttribute('style', progressbarStyle(progressstart, progresstime/1000))
+function Progress(progress: Pointer<number>, length: Pointer<number>) {
+    return Custom((() => {
+        const element = createElement("div");
+        element.setAttribute("style", `height: 10px;inset: 0;top: unset;position: absolute;background: #29d665;border-radius: 0.6rem;`);
+        progress.listen(val => {
+            element.style.width = val + "%";
+            const resetVal = element.style.transitionDuration;
+            element.style.transitionDuration = "0s";
             setTimeout(() => {
-                progressbar.setAttribute('style', progressbarStyle(100, progresstime/1000))
-            }, 100)
-        }
-    }, 'spotify')
+                element.style.transitionDuration = resetVal;
+            }, 500);
+        });
+        const animation = element.animate([
+            // {
+            //     composite:
+            // }
+        ])
+        // animation.
+        length.listen(val => {
+            element.style.transitionDuration = `${val}s`;
+        })
+        return element;
+    })());
+}
 
-    return space;
+export function renderSpotify() {
+    const POGress = asPointer(0);
+    const duration = asPointer(100);
+    state.$spotify.listen(it => {
+        if (it == "loading") return 'Loading';
+
+        POGress.setValue((it.progress_ms / it.item.duration_ms) * 100);
+        duration.setValue((it.item.duration_ms - it.progress_ms) / 1000);
+    })
+    return Entry(
+        Vertical(
+            Grid(
+                Vertical(
+                    PlainText("spotify")
+                        .setFont(1, 600)
+                        .addClass("leading-text"),
+                    BasicLabel({
+                        title: state.$spotify.map((it) => {
+                            if (it == "loading") return 'Loading';
+                            if (it.is_playing == false) return 'Playback Paused';
+
+                            if ("album" in it.item) {
+                                return `${it.item.name} - ${it.item.artists.map((artist: any) => artist.name).join(', ')}`;
+                            } else if ("episode" in it.item) {
+                                return `${it.item.name} - ${it.item.show.publisher}`;
+                            } else {
+                                return "Error while Loading"
+                            }
+                        }),
+                        subtitle: ref`${state.$spotify.map(it => it != "loading"
+                            ? it.is_playing ? "Listening on " + it.device.name
+                                : ("album" in it.item) ? `Last Song: ${it.item.name} - ${it.item.artists.map((artist: any) => artist.name).join(', ')}` : `Last Episode: ${it.item.name} - ${it.item.show.publisher}`
+                            : "Loading"
+                        )}`
+                    }),
+                )
+            )
+                .addSuffix(
+                    HeavyReRender(state.$spotify.map((it) => {
+                        if (it == "loading")
+                            return Spotify_Listening
+                        if (it.is_playing == false)
+                            return Spotify_Not_Listening
+                        if ("album" in it.item)
+                            return it.item.album.images[ 1 ].url
+                        if ("episode" in it.item)
+                            return it.item.show.images[ 1 ].url
+                    }), it => Image(it, "Spotify Image")).addClass("spotify-image"))
+                .setRawColumns("auto 5rem"),
+            Progress(POGress, duration)
+        )
+    )
+}
+
+export function renderCards() {
+    return Grid(
+        renderDiscordStatus(),
+        renderSpotify()
+    )
+        .setEvenColumns(2)
+        .setGap("var(--gap)")
 }

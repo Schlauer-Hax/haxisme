@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "dom.asynciterable",
+            "deno.ns",
+            "deno.unstable"
+        ]
+    },
+    "imports": {
+        "webgen/": "https://raw.githubusercontent.com/lucsoft/WebGen/c4f0ff4/",
+        "std/": "https://deno.land/std@0.188.0/",
+        "shared/": "https://raw.githubusercontent.com/BBN-Holding/bbn.one/2bc3c4b/pages/shared/"
+    }
+}

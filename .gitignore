@@ -1,6 +1,2 @@
-/server/node_modules/
-/website/node_modules/
-/server/config.json
-.idea
-/website/dist/
-/server/public/
+config.json
+dist/
