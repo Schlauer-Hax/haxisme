@@ -40,26 +40,36 @@ export function renderDiscordStatus() {
     )
 }
 
-function Progress(progress: Pointer<number>, length: Pointer<number>) {
+function Progress(progress: Pointer<number>, duration: Pointer<number>) {
     return Custom((() => {
         const element = createElement("div");
         element.setAttribute("style", `height: 10px;inset: 0;top: unset;position: absolute;background: #29d665;border-radius: 0.6rem;`);
+        let animation: Animation;
         progress.listen(val => {
-            element.style.width = val + "%";
-            const resetVal = element.style.transitionDuration;
-            element.style.transitionDuration = "0s";
-            setTimeout(() => {
-                element.style.transitionDuration = resetVal;
-            }, 500);
+            animation = element.animate([
+                { width: "0%" },
+                { width: "100%" }
+            ], {
+                duration: duration.getValue(),
+                iterationStart: val / duration.getValue(),
+                fill: "forwards"
+            });
         });
-        const animation = element.animate([
-            // {
-            //     composite:
-            // }
-        ])
-        // animation.
-        length.listen(val => {
-            element.style.transitionDuration = `${val}s`;
+
+        state.$spotify.listen(it => {
+            if (it == "loading") return;
+            if (it.is_playing == false) {
+                animation.pause();
+            } else {
+                animation.play();
+            }
+        })
+
+        duration.listen(val => {
+            animation.effect!.updateTiming({
+                duration: val,
+                iterationStart: progress.getValue() / val
+            })
         })
         return element;
     })());
@@ -67,12 +77,12 @@ function Progress(progress: Pointer<number>, length: Pointer<number>) {
 
 export function renderSpotify() {
     const POGress = asPointer(0);
-    const duration = asPointer(100);
+    const duration = asPointer(120000);
     state.$spotify.listen(it => {
         if (it == "loading") return 'Loading';
 
-        POGress.setValue((it.progress_ms / it.item.duration_ms) * 100);
-        duration.setValue((it.item.duration_ms - it.progress_ms) / 1000);
+        POGress.setValue(it.progress_ms);
+        duration.setValue(it.item.duration_ms);
     })
     return Entry(
         Vertical(

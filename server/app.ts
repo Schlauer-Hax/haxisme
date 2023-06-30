@@ -18,12 +18,24 @@ const lastmessage = {
 
 const connections: WebSocket[] = [];
 
+let oldData: any;
 export function updateSpotify(message: any) {
+    if (oldData) {
+        if (message.item) {
+            if (oldData.is_playing !== message.is_playing ||
+                (oldData.item && oldData.item.id && message.item.id && oldData.item.id !== message.item.id) ||
+                (message.is_playing && oldData.progress_ms / 1000 + 4 > message.progress_ms / 1000) ||
+                (message.is_playing && oldData.progress_ms / 1000 < message.progress_ms / 1000 - 6)) {
+                pushWebsockets({ spotify: message });
+            }
+        }
+    } else pushWebsockets({ spotify: message });
+    oldData = message;
     lastmessage.spotify = message;
-    pushWebsockets({ spotify: message })
 }
 
 export function updateDiscord(message: any) {
+    if (lastmessage.discord === message) return;
     lastmessage.discord = message;
     pushWebsockets({ discord: message });
 }
@@ -41,7 +53,7 @@ async function startEverything() {
 }
 await startEverything();
 
-await Deno.serve({ port: 8000 }, async (rsp) => {
+await Deno.serve({ port: 8080 }, async (rsp) => {
     const url = new URL(rsp.url)
     if (url.pathname == "/api/ws") {
         const { response, socket } = Deno.upgradeWebSocket(rsp);
