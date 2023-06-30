@@ -17,6 +17,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Deno
+        uses: denolib/setup-deno@v2
+        with:
+          deno-version: v1.x
+
+      - name: Build Website
+        run: |
+            cd website/
+            deno run -A serve.ts build
+            mv dist ../server/dist
+
       - name: Build and push
         uses: docker/build-push-action@v3
         with:

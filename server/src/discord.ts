@@ -1,4 +1,4 @@
-import { assert } from "https://deno.land/std@0.152.0/_util/assert.ts";
+import { assert } from "std/testing/asserts.ts";
 import { updateDiscord } from "../app.ts";
 import config from "../config.json" assert { type: "json" };
 import { Client, Presence } from 'https://deno.land/x/harmony@v2.8.0/mod.ts'

@@ -57,7 +57,7 @@ function Progress(progress: Pointer<number>, duration: Pointer<number>) {
         });
 
         state.$spotify.listen(it => {
-            if (it == "loading") return;
+            if (it == "loading") return animation.pause();
             if (it.is_playing == false) {
                 animation.pause();
             } else {

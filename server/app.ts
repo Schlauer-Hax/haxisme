@@ -1,6 +1,7 @@
 import config from "./config.json" assert { type: "json" };
 import { startBot } from "./src/discord.ts";
 import { getRedirectURL, auth } from "./src/spotify.ts";
+import { serveDir } from "std/http/file_server.ts";
 
 const lastmessage = {
     discord: '',
@@ -91,5 +92,7 @@ await Deno.serve({ port: 8080 }, async (rsp) => {
         }
         return new Response("Unauthorized", { statusText: "Unauthorized", status: 401 });
     }
-    return new Response("404 Not Found", { statusText: "Not found", status: 404 });
+    return serveDir(rsp, {
+        fsRoot: "../website/dist",
+    });
 }).finished;
