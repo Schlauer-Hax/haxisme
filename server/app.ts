@@ -5,15 +5,13 @@ import { serveDir } from "std/http/file_server.ts";
 
 const lastmessage = {
     discord: '',
-    apple: config.devices.map(device => {
-        return {
-            name: device,
-            battery: '0',
-            charging: 'false',
-            connection: 'NaN',
-            time: 0
-        }
-    }),
+    apple: config.devices.map(device => ({
+        name: device,
+        battery: '0',
+        charging: 'false',
+        connection: 'NaN',
+        time: 0
+    })),
     spotify: ''
 };
 
