@@ -1,1 +1,3 @@
 config.json
+website/dist
+deno.lock
