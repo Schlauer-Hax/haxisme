@@ -1,6 +1,6 @@
-FROM denoland/deno:1.34.3
+FROM denoland/deno:1.36.4
 
 EXPOSE 3000
-WORKDIR /app/server
+WORKDIR /server
 
 CMD ["deno", "run", "-A", "--unstable", "app.ts"]
