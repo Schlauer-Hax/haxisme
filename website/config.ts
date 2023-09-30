@@ -1,5 +1,5 @@
 export const config = {
-    title: "Hax - COO of BBN",
+    title: "Hax - CEO of BBN",
     links: [
         { title: "Discord", url: "https://discord.gg/nPwjaJk" },
         { title: "GitHub", url: "https://github.com/Schlauer-Hax" },
