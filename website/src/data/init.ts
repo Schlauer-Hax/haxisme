@@ -1,14 +1,15 @@
-import { emitEvent, EventType } from "./eventListener";
+import { State } from "webgen/mod.ts";
+import { state } from "../data/state.ts";
 
 export function startConnection() {
-    const websocket = new WebSocket((location.protocol == 'http:' ? 'ws://' : 'wss://') + location.hostname + ':' + location.port);
+    const websocket = new WebSocket(`${location.protocol == 'http:' ? 'ws://' : 'wss://'}${location.hostname}:8080/api/ws`);
     websocket.onmessage = (message) => {
         const json = JSON.parse(message.data);
+
         Object.keys(json).forEach(key => {
-            const data = json[key];
-            if (data !== '') {
-                emitEvent({[key]: json[key]}, key as EventType)
-            }
+            const data = json[ key ];
+            if (data !== '')
+                (state as any)[ key ] = State(data);
         })
     };
     websocket.onopen = () => {

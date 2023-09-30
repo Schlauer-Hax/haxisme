@@ -1,15 +1,6 @@
-FROM node:16
+FROM denoland/deno:1.34.3
 
 EXPOSE 3000
-WORKDIR /app
-COPY . .
 WORKDIR /app/server
-RUN npm i
-WORKDIR /app/website
-RUN npm i
-RUN npm run build
 
-WORKDIR /app/server
-CMD ["npm", "start"]
-
-
+CMD ["deno", "run", "-A", "--unstable", "app.ts"]

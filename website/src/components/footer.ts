@@ -1,13 +1,18 @@
-import { span } from '@lucsoft/webgen';
+import { Button, ButtonStyle, Custom, Horizontal, PlainText, Spacer, createElement } from "webgen/mod.ts";
 
 import '../styles/footer.css';
 
-export const renderFooter = () => ({
-    draw: () => {
-        const footer = span(undefined, 'footer');
-        const right = span(undefined);
-        right.innerHTML = `<a href="https://bbn.one/p/imprint.html">Imprint</a>`
-        footer.append(span("HaxIs.me – Copyright 2022"), right);
-        return footer;
-    }
-})
+export function renderFooter() {
+    const footer = createElement('footer');
+    footer.append(PlainText("HaxIs.me – Copyright " + new Date().getFullYear()).draw());
+
+    const button = Button('Imprint')
+        .asLinkButton('https://bbn.one/p/imprint.html')
+        .setStyle(ButtonStyle.Inline);
+
+    return Horizontal(
+        Custom(footer),
+        Spacer(),
+        button
+    ).setMargin('0.5rem auto').setGap('1rem')
+}

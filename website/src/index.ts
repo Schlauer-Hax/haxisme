@@ -1,27 +1,27 @@
-import {View, WebGen} from '@lucsoft/webgen';
-import {renderCards} from './components/cards';
-import {renderFooter} from './components/footer';
-import {renderNavigation} from './components/navigation';
-import {renderOpener} from './components/opener';
-import {renderDevices} from './components/devices';
-import {renderActivites} from './components/activities';
-import { renderSocialmedia } from './components/socialmedia';
-import {startConnection} from './data/init';
-import { renderAudio } from './components/audio';
+import { MaterialIcons, Vertical, View, WebGen } from "webgen/mod.ts";
+import { DynaNavigation } from "./components/navigation.ts";
+import { renderOpener } from "./components/opener.ts";
+import { renderSocials } from "./components/socials.ts";
+import { renderFooter } from "./components/footer.ts";
+import { renderDevices } from "./components/devices.ts";
+import { startConnection } from "./data/init.ts";
+import { renderCards } from "./components/cards.ts";
+import { renderDiscordActivities } from "./components/activities.ts";
 
-WebGen();
+WebGen({ icon: new MaterialIcons() });
 
+View(() => Vertical(
+    Vertical(
+        DynaNavigation(),
+        renderOpener(),
+        renderSocials(),
+        renderCards(),
+        renderDiscordActivities(),
+        renderDevices()
+    ).setGap("var(--gap)").setMargin("2rem 1rem 0"),
+    renderFooter()
+))
+    .setMaxWidth("75rem")
+    .appendOn(document.body);
 
-View(({draw}) => {
-    draw(renderNavigation())
-    draw(renderOpener())
-    draw(renderSocialmedia())
-    draw(renderCards())
-    draw(renderActivites())
-    draw(renderDevices())
-    // draw(renderAudio())
-    draw(renderFooter())
-})
-    .setMaxWidth('80rem')
-    .appendOn(document.body)
 startConnection();
