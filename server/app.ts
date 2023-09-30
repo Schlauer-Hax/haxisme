@@ -93,6 +93,6 @@ await Deno.serve({ port: 8080 }, async (rsp) => {
         return new Response("Unauthorized", { statusText: "Unauthorized", status: 401 });
     }
     return serveDir(rsp, {
-        fsRoot: "../website/dist",
+        fsRoot: "./dist",
     });
 }).finished;
