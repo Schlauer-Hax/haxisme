@@ -9,9 +9,9 @@
     ]
   },
   "imports": {
-    "webgen/": "https://raw.githubusercontent.com/lucsoft/WebGen/c4f0ff4/",
-    "std/": "https://deno.land/std@0.192.0/",
-    "shared/": "https://raw.githubusercontent.com/BBN-Holding/bbn.one/2bc3c4b/pages/shared/"
+    "webgen/": "https://raw.githubusercontent.com/lucsoft/WebGen/3af22e5/",
+    "std/": "https://deno.land/std@0.203.0/",
+    "shared/": "https://raw.githubusercontent.com/BBN-Holding/bbn.one/af95329/pages/shared/"
   },
   "tasks": {
     "start": "cd ./server && deno run -A --unstable app.ts"

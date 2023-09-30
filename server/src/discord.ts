@@ -1,4 +1,3 @@
-import { assert } from "std/testing/asserts.ts";
 import { updateDiscord } from "../app.ts";
 import config from "../config.json" assert { type: "json" };
 import { Client, Presence } from 'https://deno.land/x/harmony@v2.8.0/mod.ts'
@@ -16,13 +15,14 @@ export async function startBot() {
     client.on('ready', async () => {
         console.log("Successfully connected to gateway");
         (await client.guilds.get(config.guildId))!.presences.get(config.userid).then((x) => {
-            assert(x)
             const activities = []
-            for (const activity of x.activities) {
-                if (activity.type == 2 || activity.type == 4) continue;
-                activities.push(activity)
+            if (x) {
+                for (const activity of x.activities) {
+                    if (activity.type == 2 || activity.type == 4) continue;
+                    activities.push(activity)
+                }
+                updateDiscord({ activities, status: x.status })
             }
-            updateDiscord({ activities, status: x.status })
         })
     })
 

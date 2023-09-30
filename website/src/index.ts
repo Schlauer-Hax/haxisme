@@ -1,4 +1,4 @@
-import { MaterialIcons, Vertical, View, WebGen } from "webgen/mod.ts";
+import { Vertical, View, WebGen } from "webgen/mod.ts";
 import { DynaNavigation } from "./components/navigation.ts";
 import { renderOpener } from "./components/opener.ts";
 import { renderSocials } from "./components/socials.ts";
@@ -8,7 +8,7 @@ import { startConnection } from "./data/init.ts";
 import { renderCards } from "./components/cards.ts";
 import { renderDiscordActivities } from "./components/activities.ts";
 
-WebGen({ icon: new MaterialIcons() });
+WebGen();
 
 View(() => Vertical(
     Vertical(
