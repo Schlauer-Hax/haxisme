@@ -31,6 +31,12 @@ jobs:
             deno run -A serve.ts build
             mv dist ../server/
 
+      - name: Ls
+        run: |
+            ls
+            ls ../server/
+            ls ..
+
       - name: Build and push
         uses: docker/build-push-action@v5.0.0
         with:
