@@ -4,4 +4,4 @@ EXPOSE 3000
 WORKDIR /server
 COPY . .
 
-CMD ["deno", "run", "-A", "--unstable", "app.ts"]
+CMD ["deno", "task", "start"]
