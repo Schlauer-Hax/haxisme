@@ -1,4 +1,4 @@
-FROM denoland/deno:1.36.4
+FROM denoland/deno
 
 EXPOSE 3000
 WORKDIR /server
