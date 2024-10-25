@@ -40,18 +40,11 @@ jobs:
           labels: |
             org.opencontainers.image.source="https://github.com/Schlauer-Hax/haxisme"
 
-      - name: Set up Kubectl
-        run: |
-            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-            chmod +x kubectl
-            sudo mv kubectl /usr/local/bin/
-
-      - name: Configure Kubernetes credentials
-        env:
-          KUBECONFIG_DATA: ${{ secrets.KUBE_CREDENTIALS }}
-        run: |
-            echo "$KUBECONFIG_DATA" | base64 --decode > kubeconfig.yaml
-
-      - name: Restart Rollout
-        run: |
-            kubectl rollout restart deployment haxisme -n private --kubeconfig=kubeconfig.yaml
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: cd haxisme/ && docker compose up -d --pull always 
