@@ -1,4 +1,4 @@
-import config from "../config.json" assert { type: "json" };
+import config from "../config.json" with { type: "json" };
 import { updateSpotify } from "../app.ts";
 
 export function getRedirectURL() {
@@ -50,14 +50,15 @@ export async function auth(code: string) {
             })
         }, 3600000)
 
-        setInterval(() => {
-            fetch("https://api.spotify.com/v1/me/player", {
+        setInterval(async () => {
+            const req = await fetch("https://api.spotify.com/v1/me/player", {
                 headers: {
                     "Authorization": "Bearer " + accessToken
                 }
-            }).then(x => x.json()).then(x => {
-                updateSpotify(x)
-            })
+            });
+            if (req.status === 200) {
+                req.json().then(updateSpotify);
+            }
         }, 5000)
     }
 }

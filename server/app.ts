@@ -1,4 +1,4 @@
-import config from "./config.json" assert { type: "json" };
+import config from "./config.json" with { type: "json" };
 import { startBot } from "./src/discord.ts";
 import { getRedirectURL, auth } from "./src/spotify.ts";
 import { serveDir } from "std/http/file_server.ts";

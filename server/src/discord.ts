@@ -1,5 +1,5 @@
 import { updateDiscord } from "../app.ts";
-import config from "../config.json" assert { type: "json" };
+import config from "../config.json" with { type: "json" };
 import { Client, Presence } from 'https://deno.land/x/harmony@v2.8.0/mod.ts'
 
 
