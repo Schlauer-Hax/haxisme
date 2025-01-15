@@ -1,9 +1,9 @@
 export const config = {
-    title: "Hax - CEO of BBN",
+    title: "Maximilian Arzberger",
     links: [
         { title: "Discord", url: "https://discord.gg/nPwjaJk" },
         { title: "GitHub", url: "https://github.com/Schlauer-Hax" },
-        { title: "Instagram", url: "https://www.instagram.com/haxhd/" },
+        { title: "Instagram", url: "https://www.instagram.com/hax6775/" },
         { title: "Twitter", url: "https://twitter.com/Hax6775" },
     ],
     navigationElements: [
