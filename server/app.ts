@@ -5,13 +5,7 @@ import { serveDir } from "std/http/file_server.ts";
 
 const lastmessage = {
     discord: '',
-    apple: config.devices.map(device => ({
-        name: device,
-        battery: '0',
-        charging: 'false',
-        connection: 'NaN',
-        time: 0
-    })),
+    apple: [] as { name: string, battery: string, charging: string, connection: string, time: number }[],
     spotify: ''
 };
 
@@ -77,14 +71,17 @@ await Deno.serve({ port: 8080 }, async (rsp) => {
         const entries = url.searchParams;
         if (entries.get("password") === config.api_pw) {
             const possibledevices = lastmessage.apple.filter(device => device.name === entries.get("name"));
-            if (possibledevices.length === 0) return new Response("Device not found", { statusText: "Device not found", status: 404 });
-            const device = possibledevices[ 0 ];
+            const device = possibledevices.length > 0 ? possibledevices[0] : { name: entries.get("name") ?? "No name", battery: "0", charging: "false", connection: "unknown", time: new Date().getTime() };
             const index = lastmessage.apple.indexOf(device);
             device.battery = entries.get("percentage") || device.battery;
             device.connection = entries.get("connection") || device.connection;
             device.charging = entries.get("charging") || device.charging;
             device.time = new Date().getTime()
-            lastmessage.apple[ index ] = device;
+            if (index === -1) {
+                lastmessage.apple.push(device);
+            } else {
+                lastmessage.apple[ index ] = device;
+            }
             pushWebsockets({ apple: lastmessage.apple });
             return new Response("OK", { statusText: "OK", status: 200 });
         }
