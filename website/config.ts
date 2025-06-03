@@ -9,7 +9,7 @@ export const config = {
     navigationElements: [
         { title: 'HaxIs.me', url: 'https://haxis.me' },
         { title: 'GitHub', url: 'https://github.com/Schlauer-Hax' },
-        { title: 'BBN', url: 'https://bbn.one' },
+        { title: 'BBN', url: 'https://bbn.music' },
         { title: 'Contact', url: 'mailto:mail@haxis.me' }
     ]
 };
