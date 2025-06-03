@@ -7,7 +7,7 @@ export function renderFooter() {
     footer.append(PlainText("HaxIs.me – Copyright " + new Date().getFullYear()).draw());
 
     const button = Button('Imprint')
-        .asLinkButton('https://bbn.one/p/imprint.html')
+        .asLinkButton('https://bbn.music/p/imprint.html')
         .setStyle(ButtonStyle.Inline);
 
     return Horizontal(
