@@ -6,7 +6,7 @@ import Spotify_Listening from '../../static/spotify_listening.svg';
 import Spotify_Not_Listening from '../../static/spotify_notlistening.svg';
 import '../styles/cards.css';
 import { BasicLabel, Custom, Entry, Grid, Image, PlainText, Pointer, Vertical, asPointer, createElement, ref } from "webgen/mod.ts";
-import { HeavyReRender } from "shared/list.ts"
+import { HeavyReRender } from "../shared/list.ts"
 import { state } from "../data/state.ts";
 
 const discordIcons = {

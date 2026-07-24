@@ -1,7 +1,7 @@
 import { Custom, PlainText, Vertical, createElement, custom } from 'webgen/mod.ts';
 import '../styles/devices.css';
 import { state } from "../data/state.ts";
-import { HeavyReRender } from "shared/list.ts";
+import { HeavyReRender } from "../shared/list.ts";
 
 export function renderDevices() {
     return HeavyReRender(state.$apple, (it) => Vertical(

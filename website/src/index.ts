@@ -7,6 +7,7 @@ import { renderDevices } from "./components/devices.ts";
 import { startConnection } from "./data/init.ts";
 import { renderCards } from "./components/cards.ts";
 import { renderDiscordActivities } from "./components/activities.ts";
+import { renderTrainyRow } from "./components/trainy.ts";
 
 WebGen();
 
@@ -17,7 +18,8 @@ View(() => Vertical(
         renderSocials(),
         renderCards(),
         renderDiscordActivities(),
-        renderDevices()
+        renderDevices(),
+        renderTrainyRow()
     ).setGap("var(--gap)").setMargin("2rem 1rem 0"),
     renderFooter()
 ))

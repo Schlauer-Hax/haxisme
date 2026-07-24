@@ -1,11 +1,20 @@
+.opener-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 6rem 0;
+}
+
 .opener-text {
     font-weight: bold;
     display: inline-block;
-    text-align: right;
+    text-align: center;
     font-size: 3.9rem;
-    margin: 6rem auto;
+    margin: 0;
     width: 43rem;
-    text-align-last: right;
+    text-align-last: center;
     color: var(--on-card-text);
 }
 
@@ -53,7 +62,7 @@
         width: 29rem;
         padding-right: 2rem;
     }
-    .opener div {
+    .opener-image {
         transform: scale(0.7);
     }
 }
@@ -62,7 +71,7 @@
     .opener .opener-text {
         padding-right: 1rem;
     }
-    .opener div {
+    .opener-image {
         width: 12rem;
     }
 }
@@ -72,7 +81,7 @@
         grid-template-columns: auto;
         margin: 1rem 2.2rem;
     }
-    .opener div {
+    .opener-image {
         display: none;
     }
     .opener .opener-text {
