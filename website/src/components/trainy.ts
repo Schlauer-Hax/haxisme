@@ -52,7 +52,7 @@ export function renderTrainyRow() {
     mapWrap.style.flex = "1";
     mapWrap.style.minWidth = "300px";
 
-    const map = trainyFrame(mapUrl, 450);
+    const map = trainyFrame(`${mapUrl}?hideSearch`, 450);
     map.width = "100%";
     map.style.width = "100%";
 
